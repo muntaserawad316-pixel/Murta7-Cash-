@@ -1,0 +1,34 @@
+# Render Blueprint — بيوصف السيرفر وقاعدة البيانات مع بعض
+# عشان Render يقدر ينشئهم تلقائياً بضغطة واحدة (Deploy to Render)
+# راجع server/DEPLOY.md للخطوات الكاملة بالتفصيل
+
+databases:
+  - name: ewallet-db
+    plan: free
+    databaseName: ewallet_db
+    user: ewallet_user
+
+services:
+  - type: web
+    name: ewallet-server
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ewallet-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_ACCESS_EXPIRY
+        value: "900"
+      - key: JWT_REFRESH_EXPIRY_DAYS
+        value: "30"
+      - key: DEV_MODE
+        value: "true"
+      - key: NODE_ENV
+        value: "production"
