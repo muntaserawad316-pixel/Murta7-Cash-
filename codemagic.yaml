@@ -6,8 +6,12 @@ workflows:
       flutter: stable
     scripts:
       - name: Install dependencies
-        script: flutter packages get
+        script: |
+          cd mobile_app
+          flutter packages get
       - name: Build debug APK
-        script: flutter build apk --debug
+        script: |
+          cd mobile_app
+          flutter build apk --debug
     artifacts:
-      - build/app/outputs/flutter-apk/app-debug.apk
+      - "mobile_app/build/app/outputs/flutter-apk/app-debug.apk"
